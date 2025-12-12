@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fix Markdown Bold with Chinese Quotes
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  修复 **“中文内容”** 不能正确渲染粗体的问题，将其转换为 “<b>中文内容</b>”
 // @match        https://chatgpt.com/*
 // @match        https://chat.openai.com/*
@@ -13,9 +13,11 @@
 (function() {
     'use strict';
 
+    console.log('MarkdownFix: Script loaded');
+
     // 正则：匹配 **“xxx”** 的模式
-    // 注意：这里假设文本节点中包含完整的标记。
-    const pattern = /\*\*“(.+?)”\*\*/g;
+    // 使用 [\s\S] 匹配包括换行符在内的所有字符，并支持可选的闭合引号
+    const pattern = /\*\*“([\s\S]*?)(”)?\*\*/g;
 
     function fixBoldQuotes(rootNode) {
         // 忽略脚本、样式和可编辑区域（避免破坏编辑器源码）
@@ -73,6 +75,8 @@
         
         if (!pattern.test(text)) return;
 
+        console.log('MarkdownFix: Replacing content in', textNode);
+
         const fragment = document.createDocumentFragment();
         let lastIndex = 0;
         let match;
@@ -87,7 +91,8 @@
             }
 
             // match[0] 是完整字符串 **“内容”**
-            // match[1] 是捕获组中的 内容
+            // match[1] 是内容
+            // match[2] 是可选的闭合引号 ”
 
             // 2. 添加左引号
             fragment.appendChild(document.createTextNode('“'));
@@ -97,8 +102,10 @@
             strong.textContent = match[1];
             fragment.appendChild(strong);
 
-            // 4. 添加右引号
-            fragment.appendChild(document.createTextNode('”'));
+            // 4. 添加右引号 (如果存在)
+            if (match[2]) {
+                fragment.appendChild(document.createTextNode(match[2]));
+            }
 
             lastIndex = pattern.lastIndex;
         }
