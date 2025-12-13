@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fix Markdown Bold with Chinese Quotes
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.4.1
 // @description  修复 **“中文内容”** 不能正确渲染粗体的问题，将其转换为 “<b>中文内容</b>”
 // @match        https://chatgpt.com/*
 // @match        https://chat.openai.com/*
@@ -9,7 +9,7 @@
 // @match        https://aistudio.google.com/*
 // @match        https://claude.ai/*
 // @match        https://www.doubao.com/*
-// @match        https://kimi.moonshot.cn/*
+// @match        https://www.kimi.com/*
 // @match        https://chatglm.cn/*
 // @match        https://yiyan.baidu.com/*
 // @match        https://hunyuan.tencent.com/*
